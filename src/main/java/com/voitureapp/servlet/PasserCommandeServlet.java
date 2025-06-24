@@ -60,7 +60,7 @@ public class PasserCommandeServlet extends HttpServlet {
             int kmDepart = Integer.parseInt(request.getParameter("kilometrage_depart"));
 
             Client client = clientService.getClientById(idClient);
-            Voiture voiture = voitureService.getVoitureByImmatriculation(immatriculation);
+            Voiture voiture = voitureService.getVoitureById(immatriculation);
             Gestionnaire gestionnaire = new Gestionnaire();
             gestionnaire.setIdGestionnaire(idGestionnaire);
 
