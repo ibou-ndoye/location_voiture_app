@@ -60,15 +60,15 @@ public class GestionnaireDashboardServlet extends HttpServlet {
                     "SELECT l.voiture, COUNT(l) FROM Location l GROUP BY l.voiture ORDER BY COUNT(l) DESC", Object[].class)
                     .setMaxResults(5).getResultList();
 
-            // Bilan financier mensuel
+            // ✅ Bilan financier mensuel corrigé avec MONTHNAME pour affichage lisible
             List<Object[]> bilanMensuel = em.createQuery(
-                    "SELECT FUNCTION('MONTH', l.dateDebut), FUNCTION('YEAR', l.dateDebut), SUM(l.prixTotal) " +
-                    "FROM Location l WHERE l.dateFinReelle IS NOT NULL " +
-                    "GROUP BY FUNCTION('YEAR', l.dateDebut), FUNCTION('MONTH', l.dateDebut) " +
-                    "ORDER BY FUNCTION('YEAR', l.dateDebut) DESC, FUNCTION('MONTH', l.dateDebut) DESC", Object[].class)
+                    "SELECT FUNCTION('MONTHNAME', l.dateDebut), FUNCTION('YEAR', l.dateDebut), SUM(l.prixTotal) " +
+                            "FROM Location l " +
+                            "GROUP BY FUNCTION('YEAR', l.dateDebut), FUNCTION('MONTH', l.dateDebut), FUNCTION('MONTHNAME', l.dateDebut) " +
+                            "ORDER BY FUNCTION('YEAR', l.dateDebut) DESC, FUNCTION('MONTH', l.dateDebut) DESC", Object[].class)
                     .getResultList();
 
-            // Envoi à la JSP
+            // Attributs envoyés à la JSP
             req.setAttribute("nbTotalVoitures", nbTotalVoitures);
             req.setAttribute("nbVoituresDisponibles", nbVoituresDisponibles);
             req.setAttribute("nbVoituresEnLocation", nbVoituresEnLocation);
@@ -95,6 +95,7 @@ public class GestionnaireDashboardServlet extends HttpServlet {
         }
     }
 
+    // Classe interne pour ajouter les jours restants à une location
     public static class LocationAvecJoursRestants {
         private final Location location;
         private final long joursRestants;
@@ -104,11 +105,28 @@ public class GestionnaireDashboardServlet extends HttpServlet {
             this.joursRestants = joursRestants;
         }
 
-        public Location getLocation() { return location; }
-        public long getJoursRestants() { return joursRestants; }
-        public Voiture getVoiture() { return location.getVoiture(); }
-        public com.voitureapp.model.Client getClient() { return location.getClient(); }
-        public java.time.LocalDateTime getDateDebut() { return location.getDateDebut(); }
-        public java.time.LocalDateTime getDateFinPrevue() { return location.getDateFinPrevue(); }
+        public Location getLocation() {
+            return location;
+        }
+
+        public long getJoursRestants() {
+            return joursRestants;
+        }
+
+        public Voiture getVoiture() {
+            return location.getVoiture();
+        }
+
+        public com.voitureapp.model.Client getClient() {
+            return location.getClient();
+        }
+
+        public java.time.LocalDateTime getDateDebut() {
+            return location.getDateDebut();
+        }
+
+        public java.time.LocalDateTime getDateFinPrevue() {
+            return location.getDateFinPrevue();
+        }
     }
 }
