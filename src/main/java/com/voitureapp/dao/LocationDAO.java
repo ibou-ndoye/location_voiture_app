@@ -52,6 +52,23 @@ public class LocationDAO {
             em.close();
         }
     }
+    public List<Location> getVoituresEnLocation() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Location> query = em.createQuery(
+                "SELECT l FROM Location l " +
+                "JOIN FETCH l.voiture v " +
+                "JOIN FETCH l.client c " +
+                "WHERE l.dateFinReelle IS NULL",
+                Location.class
+            );
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+
 
     public void delete(int id) {
         EntityManager em = emf.createEntityManager();

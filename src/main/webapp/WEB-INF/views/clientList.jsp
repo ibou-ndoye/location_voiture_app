@@ -2,58 +2,74 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:include page="/WEB-INF/views/includes/header.jsp"/>
 
+<c:set var="hasSearch" value="${not empty param.recherche}" />
+
 <div class="container py-5">
-    <div class="bg-light p-4 rounded shadow-sm">
-        <h2 class="mb-4 text-primary fw-bold border-bottom pb-2">Ajouter un nouveau client</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold mb-0">Ajouter / Modifier un client</h2>
+        <a href="${pageContext.request.contextPath}/" class="btn btn-primary">
+            <i class="bi bi-house-door-fill"></i> Accueil
+        </a>
+    </div>
+
+    <div class="bg-light p-4 rounded shadow-sm mb-5">
         <form action="${pageContext.request.contextPath}/clients" method="post" class="row g-3">
+            <input type="hidden" name="idClient" value="${client.idClient}" />
             <div class="col-md-4">
                 <label class="form-label">CIN</label>
-                <input type="text" name="cin" class="form-control" required/>
+                <input type="text" name="cin" class="form-control" value="${client.cin}" required />
             </div>
             <div class="col-md-4">
                 <label class="form-label">Prénom</label>
-                <input type="text" name="prenom" class="form-control" required/>
+                <input type="text" name="prenom" class="form-control" value="${client.prenom}" required />
             </div>
             <div class="col-md-4">
                 <label class="form-label">Nom</label>
-                <input type="text" name="nom" class="form-control" required/>
+                <input type="text" name="nom" class="form-control" value="${client.nom}" required />
             </div>
             <div class="col-md-4">
                 <label class="form-label">Sexe</label>
                 <select name="sexe" class="form-select" required>
-                    <option value="M">Masculin</option>
-                    <option value="F">Féminin</option>
+                    <option value="M" ${client.sexe == 'M' ? 'selected' : ''}>Masculin</option>
+                    <option value="F" ${client.sexe == 'F' ? 'selected' : ''}>Féminin</option>
                 </select>
             </div>
             <div class="col-md-8">
                 <label class="form-label">Adresse</label>
-                <input type="text" name="adresse" class="form-control" required/>
+                <input type="text" name="adresse" class="form-control" value="${client.adresse}" required />
             </div>
             <div class="col-md-6">
                 <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" required/>
+                <input type="email" name="email" class="form-control" value="${client.email}" required />
             </div>
             <div class="col-md-6">
                 <label class="form-label">Téléphone</label>
-                <input type="text" name="telephone" class="form-control" required/>
+                <input type="text" name="telephone" class="form-control" value="${client.telephone}" required />
             </div>
             <div class="col-12 d-flex justify-content-end">
-                <button type="submit" class="btn btn-success px-4">Ajouter</button>
+                <button type="submit" class="btn btn-success px-4">Enregistrer</button>
             </div>
         </form>
     </div>
 
-    <hr class="my-5"/>
+    <hr class="my-5" />
 
     <h2 class="mb-3 text-info">
         <a href="#" id="toggleClientList" class="text-decoration-none">📋 Liste des Clients</a>
     </h2>
 
-    <div class="mb-3" id="downloadSection" style="display: none;">
+    <div class="row mb-3" id="searchBar" style="display: ${hasSearch ? 'flex' : 'none'};">
+        <form method="get" action="${pageContext.request.contextPath}/clients" class="d-flex gap-2">
+            <input type="text" name="recherche" class="form-control" placeholder="Rechercher par nom ou CIN">
+            <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+        </form>
+    </div>
+
+    <div class="mb-3" id="downloadSection" style="display: ${hasSearch ? 'block' : 'none'};">
         <button id="downloadPdfBtn" class="btn btn-outline-danger">📥 Télécharger la liste (PDF)</button>
     </div>
 
-    <div id="clientList" class="table-responsive" style="display: none;">
+    <div id="clientList" class="table-responsive" style="display: ${hasSearch ? 'block' : 'none'};">
         <table id="clientsTable" class="table table-hover table-striped table-bordered align-middle">
             <thead class="table-primary text-center">
                 <tr>
@@ -65,6 +81,7 @@
                     <th>Adresse</th>
                     <th>Email</th>
                     <th>Téléphone</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,6 +95,18 @@
                         <td>${client.adresse}</td>
                         <td>${client.email}</td>
                         <td>${client.telephone}</td>
+                        <td>
+                            <a href="clients/details?id=${client.idClient}" class="btn btn-sm btn-info" title="Voir Détails">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="clients/modifier?id=${client.idClient}" class="btn btn-sm btn-warning" title="Modifier">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="clients/supprimer?id=${client.idClient}" class="btn btn-sm btn-danger" title="Supprimer"
+                               onclick="return confirm('Confirmer la suppression ?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
                     </tr>
                 </c:forEach>
             </tbody>
@@ -93,13 +122,15 @@
 
 <!-- JS toggle + PDF -->
 <script>
-    document.getElementById("toggleClientList").addEventListener("click", function(event) {
+    document.getElementById("toggleClientList").addEventListener("click", function (event) {
         event.preventDefault();
         const list = document.getElementById("clientList");
         const download = document.getElementById("downloadSection");
+        const search = document.getElementById("searchBar");
         const isHidden = list.style.display === "none";
         list.style.display = isHidden ? "block" : "none";
         download.style.display = isHidden ? "block" : "none";
+        search.style.display = isHidden ? "flex" : "none";
     });
 
     document.getElementById("downloadPdfBtn").addEventListener("click", function () {
@@ -110,10 +141,10 @@
 
         const table = document.getElementById("clientsTable");
         const rows = Array.from(table.querySelectorAll("tbody tr")).map(row => {
-            return Array.from(row.querySelectorAll("td")).map(cell => cell.innerText);
+            return Array.from(row.querySelectorAll("td")).slice(0, -1).map(cell => cell.innerText);
         });
 
-        const headers = Array.from(table.querySelectorAll("thead th")).map(th => th.innerText);
+        const headers = Array.from(table.querySelectorAll("thead th")).slice(0, -1).map(th => th.innerText);
 
         doc.autoTable({
             head: [headers],
@@ -123,5 +154,15 @@
         });
 
         doc.save("liste_clients.pdf");
+    });
+
+    // Force l'affichage de la liste si une recherche est en cours
+    window.addEventListener("DOMContentLoaded", () => {
+        const hasSearch = "${hasSearch}" === "true";
+        if (hasSearch) {
+            document.getElementById("clientList").style.display = "block";
+            document.getElementById("downloadSection").style.display = "block";
+            document.getElementById("searchBar").style.display = "flex";
+        }
     });
 </script>

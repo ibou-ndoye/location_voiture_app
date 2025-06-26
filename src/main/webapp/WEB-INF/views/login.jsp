@@ -47,7 +47,7 @@
                     </form>
 
                     <div class="text-center mt-4">
-                        <small class="text-muted">© ${pageContext.request.serverName} - Système de gestion</small>
+                        <small class="text-muted"> Système de gestion</small>
                     </div>
                 </div>
             </div>

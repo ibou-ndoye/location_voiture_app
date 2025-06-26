@@ -33,6 +33,18 @@ public class VoitureDAO {
             em.close();
         }
     }
+    
+    // ➤ Compter le nombre total de voitures
+    public int countAll() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Long count = em.createQuery("SELECT COUNT(v) FROM Voiture v", Long.class)
+                           .getSingleResult();
+            return count.intValue();
+        } finally {
+            em.close();
+        }
+    }
 
     // ➤ Lister toutes les voitures
     public List<Voiture> findAll() {
@@ -71,6 +83,21 @@ public class VoitureDAO {
             em.close();
         }
     }
+    
+    
+    public List<Voiture> getVoituresDisponibles() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Voiture> query = em.createQuery(
+                "SELECT v FROM Voiture v WHERE v NOT IN " +
+                "(SELECT l.voiture FROM Location l WHERE l.dateFinReelle IS NULL)",
+                Voiture.class);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
 
     // ➤ Rechercher voitures par mot-clé et marque
     public List<Voiture> rechercherParMotCleEtMarque(String query, String marque) {
