@@ -12,7 +12,7 @@
             <label class="form-label">Marque</label>
             <input type="text" class="form-control" name="marque" value="${voiture.marque}" required />
         </div>
-
+ 
         <div class="mb-3">
             <label class="form-label">Modèle</label>
             <input type="text" class="form-control" name="modele" value="${voiture.modele}" required />
