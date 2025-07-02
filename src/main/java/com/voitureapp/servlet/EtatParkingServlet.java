@@ -28,28 +28,29 @@ public class EtatParkingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // ✅ Vérification d'authentification
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("utilisateurConnecte") == null) {
-            // Redirection vers la page de login (ex: /login)
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         try {
-            // ✅ Récupération des données du parking
             int nombreTotal = voitureDAO.countAll();
             List<Location> voituresEnLocation = locationDAO.getVoituresEnLocation();
             List<Voiture> voituresDisponibles = voitureDAO.getVoituresDisponibles();
 
-            // ✅ Passage à la JSP
+            // Formatage des dates dans les locations
+            for (Location loc : voituresEnLocation) {
+                loc.formaterDates();
+            }
+
             request.setAttribute("nombreTotal", nombreTotal);
             request.setAttribute("voituresEnLocation", voituresEnLocation);
             request.setAttribute("voituresDisponibles", voituresDisponibles);
 
             request.getRequestDispatcher("/WEB-INF/views/etatParking.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace(); // à supprimer en prod
+            e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur serveur : " + e.getMessage());
         }
     }

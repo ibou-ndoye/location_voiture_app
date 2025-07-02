@@ -3,7 +3,7 @@
 <jsp:include page="/WEB-INF/views/includes/header.jsp" />
 
 <!-- Bootstrap & Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <div class="container my-5">
@@ -44,6 +44,7 @@
         </div>
         <div class="table-responsive">
             <table class="table table-striped align-middle text-center">
+                <caption class="visually-hidden">Liste des voitures en cours de location</caption>
                 <thead class="table-warning">
                     <tr>
                         <th>Immatriculation</th>
@@ -51,22 +52,46 @@
                         <th>Modèle</th>
                         <th>Client</th>
                         <th>Téléphone</th>
-                        <th>Date location</th>
+                        <th>Date début location</th>
+                        <th>Date fin prévue</th>
+                        <th>Date fin réelle</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="v" items="${voituresEnLocation}">
                         <tr>
-                            <td>${v.immatriculation}</td>
-                            <td>${v.marque}</td>
-                            <td>${v.modele}</td>
+                            <td>${v.voiture.immatriculation}</td>
+                            <td>${v.voiture.marque}</td>
+                            <td>${v.voiture.modele}</td>
                             <td>${v.client.nom} ${v.client.prenom}</td>
                             <td>${v.client.telephone}</td>
-                            <td>${v.dateLocation}</td>
+                            <td>${v.dateDebutFormatee}</td>
+                            <td>${v.dateFinPrevueFormatee}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty v.dateFinReelleFormatee}">
+                                        ${v.dateFinReelleFormatee}
+                                    </c:when>
+                                    <c:otherwise>
+                                        En cours
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:if test="${empty v.dateFinReelleFormatee}">
+                                    <form action="${pageContext.request.contextPath}/retournerVoiture" method="get">
+                                        <input type="hidden" name="idLocation" value="${v.idLocation}" />
+                                        <button type="submit" class="btn btn-sm btn-primary">Retourner voiture</button>
+                                    </form>
+                                </c:if>
+                            </td>
                         </tr>
                     </c:forEach>
                     <c:if test="${empty voituresEnLocation}">
-                        <tr><td colspan="6" class="text-muted">Aucune voiture en location</td></tr>
+                        <tr>
+                            <td colspan="9" class="text-muted">Aucune voiture en location</td>
+                        </tr>
                     </c:if>
                 </tbody>
             </table>
@@ -80,6 +105,7 @@
         </div>
         <div class="table-responsive">
             <table class="table table-hover align-middle text-center">
+                <caption class="visually-hidden">Liste des voitures disponibles</caption>
                 <thead class="table-success">
                     <tr>
                         <th>Immatriculation</th>
@@ -102,7 +128,9 @@
                         </tr>
                     </c:forEach>
                     <c:if test="${empty voituresDisponibles}">
-                        <tr><td colspan="6" class="text-muted">Aucune voiture disponible</td></tr>
+                        <tr>
+                            <td colspan="6" class="text-muted">Aucune voiture disponible</td>
+                        </tr>
                     </c:if>
                 </tbody>
             </table>

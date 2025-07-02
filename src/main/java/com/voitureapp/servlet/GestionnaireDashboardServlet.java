@@ -34,8 +34,15 @@ public class GestionnaireDashboardServlet extends HttpServlet {
         try {
             // Statistiques globales
             Long nbTotalVoitures = em.createQuery("SELECT COUNT(v) FROM Voiture v", Long.class).getSingleResult();
-            Long nbVoituresDisponibles = em.createQuery("SELECT COUNT(v) FROM Voiture v WHERE v.disponible = true", Long.class).getSingleResult();
-            Long nbVoituresEnLocation = nbTotalVoitures - nbVoituresDisponibles;
+            Long nbVoituresEnLocation = em.createQuery(
+            	    "SELECT COUNT(DISTINCT l.voiture) FROM Location l WHERE l.dateFinReelle IS NULL", Long.class
+            	).getSingleResult();
+
+            	Long nbVoituresDisponibles = em.createQuery(
+            	    "SELECT COUNT(v) FROM Voiture v WHERE v.id NOT IN (" +
+            	    "SELECT l.voiture.id FROM Location l WHERE l.dateFinReelle IS NULL" +
+            	    ")", Long.class
+            	).getSingleResult();
 
             // Locations actives
             List<Location> locationsActives = em.createQuery("SELECT l FROM Location l WHERE l.dateFinReelle IS NULL", Location.class).getResultList();

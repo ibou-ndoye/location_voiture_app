@@ -9,7 +9,6 @@
             <div class="pt-4 text-center">
                 <h4>Menu</h4>
                 <ul class="nav flex-column mt-4">
-                    <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/gestionnaire/dashboard">Dashboard</a></li>
                     <c:if test="${role == 'CHEF'}">
                         <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/voitures">Voitures</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/locations">Locations</a></li>
@@ -115,7 +114,7 @@
                         <c:forEach var="vp" items="${voituresPopularite}">
                             <tr>
                                 <td>
-                                    <img src="${pageContext.request.contextPath}/images/${vp[0].photo}" alt="Photo" class="img-thumbnail" style="width: 80px; height: 50px; object-fit: cover;" />
+                                    <img src="${pageContext.request.contextPath}/voiture/${vp[0].photo}" alt="Photo" class="img-thumbnail" style="width: 80px; height: 50px; object-fit: cover;" />
                                 </td>
                                 <td>${vp[0].immatriculation}</td>
                                 <td>${vp[0].marque}</td>

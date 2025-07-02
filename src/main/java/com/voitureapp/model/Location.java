@@ -2,6 +2,7 @@ package com.voitureapp.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "location")
@@ -48,7 +49,24 @@ public class Location {
     @Column(name = "signe_gestionnaire", nullable = false)
     private boolean signeGestionnaire = false;
 
-    // Getters & setters
+    @Transient
+    private String dateDebutFormatee;
+
+    @Transient
+    private String dateFinPrevueFormatee;
+
+    @Transient
+    private String dateFinReelleFormatee;
+
+    // Méthode pour formatter toutes les dates
+    public void formaterDates() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        this.dateDebutFormatee = (dateDebut != null) ? dateDebut.format(formatter) : "";
+        this.dateFinPrevueFormatee = (dateFinPrevue != null) ? dateFinPrevue.format(formatter) : "";
+        this.dateFinReelleFormatee = (dateFinReelle != null) ? dateFinReelle.format(formatter) : "";
+    }
+
+    // Getters et setters classiques
 
     public int getIdLocation() {
         return idLocation;
@@ -144,5 +162,17 @@ public class Location {
 
     public void setSigneGestionnaire(boolean signeGestionnaire) {
         this.signeGestionnaire = signeGestionnaire;
+    }
+
+    public String getDateDebutFormatee() {
+        return dateDebutFormatee;
+    }
+
+    public String getDateFinPrevueFormatee() {
+        return dateFinPrevueFormatee;
+    }
+
+    public String getDateFinReelleFormatee() {
+        return dateFinReelleFormatee;
     }
 }
