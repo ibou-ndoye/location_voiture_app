@@ -32,4 +32,13 @@ public class ServiceLocation {
     public void fermer() {
         locationDAO.close();
     }
+    
+    public Location findByIdAvecDetails(int id) {
+        return locationDAO.findByIdAvecDetails(id);
+    }
+    
+    public void mettreAJourLocation(Location location) {
+        locationDAO.update(location);
+    }
+
 }

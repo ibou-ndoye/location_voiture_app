@@ -1,131 +1,131 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<% request.setAttribute("pageTitle", "Gestion des Voitures"); %>
+
 <jsp:include page="/WEB-INF/views/includes/header.jsp" />
 
-<!-- Bootstrap & Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Google Fonts + Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-<!-- CONTENU PRINCIPAL --
+<style>
+    body {
+        background: var(--gradient-bg), url('${pageContext.request.contextPath}/voiture/loc-voiture.avif') no-repeat center center fixed;
+            background-size: cover;
+            background-blend-mode: overlay;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+    }
 
-    <!-- En-tête -->
-    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
-        <div class="d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow" style="width: 70px; height: 70px;">
-                <div class="text-center small fw-semibold">
-                    ${utilisateurConnecte.nom}<br />${utilisateurConnecte.prenom}
-                </div>
-            </div>
-            <h2 class="fw-bold mb-0">🚗 Gestion des Voitures</h2>
-        </div>
+    .main-title {
+        text-align: center;
+        margin-bottom: 40px;
+    }
 
-        <div class="btn-group mt-3 mt-md-0 flex-wrap" role="group" aria-label="Actions principales">
-            <a href="${pageContext.request.contextPath}/" class="btn btn-outline-dark">
-                <i class="bi bi-house-door-fill"></i> Accueil
-            </a>
-            <a href="${pageContext.request.contextPath}/ajouterVoiture" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Ajouter voiture
-            </a>
-            <a href="${pageContext.request.contextPath}/clients" class="btn btn-outline-primary">
-                <i class="bi bi-people"></i> Liste Clients
-            </a>
-            <a href="${pageContext.request.contextPath}/passerCommande" class="btn btn-outline-warning">
-                <i class="bi bi-cart-check"></i> Louer voiture
-            </a>
-            <a href="${pageContext.request.contextPath}/retourVoiture" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-repeat"></i> Retour voiture
-            </a>
-            <a href="${pageContext.request.contextPath}/etatParking" class="btn btn-dark">
-                <i class="bi bi-bar-chart"></i> État Parking
-            </a>
-        </div>
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 30px;
+        justify-items: center;
+        align-items: center;
+        margin-top: 40px;
+    }
+
+    .action-btn {
+        background: white;
+        border-radius: 1rem;
+        padding: 30px;
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+        height: 180px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+        text-decoration: none;
+        color: #212529;
+        position: relative;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .action-btn i {
+        font-size: 2.5rem;
+        color: #6366f1;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .action-btn h5 {
+        font-weight: 600;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .action-btn {
+            height: 150px;
+            padding: 20px;
+        }
+
+        .action-btn i {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="container py-5">
+
+    <div class="main-title">
+        <h2 class="fw-bold text-primary">🚗 Bienvenue dans l’espace de gestion</h2>
+        <p class="text-muted">Choisissez une action ci-dessous</p>
     </div>
 
-    <!-- Barre de recherche et filtre -->
-    <div class="card shadow-sm p-3 mb-4">
-        <form class="row g-2 align-items-end" method="get" action="${pageContext.request.contextPath}/gestionvoiture">
-            <div class="col-md-3">
-                <input type="text" name="marque" class="form-control" placeholder="Marque">
-            </div>
-            <div class="col-md-3">
-                <input type="number" name="kilometrageMax" class="form-control" placeholder="Kilométrage max">
-            </div>
-            <div class="col-md-2">
-                <input type="number" name="annee" class="form-control" placeholder="Année mise en circulation">
-            </div>
-            <div class="col-md-2">
-                <select name="carburant" class="form-select">
-                    <option value="ALL">Carburant</option>
-                    <option value="ESSENCE">Essence</option>
-                    <option value="DIESEL">Diesel</option>
-                    <option value="ELECTRIQUE">Électrique</option>
-                    <option value="HYBRIDE">Hybride</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <select name="categorie" class="form-select">
-                    <option value="ALL">Catégorie</option>
-                    <c:forEach var="cat" items="${categories}">
-                        <option value="${cat}">${cat}</option>
-                    </c:forEach>
-                </select>
-            </div>
-            <div class="col-12 text-end">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i> Rechercher
-                </button>
-            </div>
-        </form>
-    </div>
+    <div class="action-grid">
 
-    <!-- Tableau des voitures -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white fw-semibold">
-            Liste des voitures disponibles
-        </div>
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered align-middle text-center mb-0">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>Photo</th>
-                        <th>Immatriculation</th>
-                        <th>Marque</th>
-                        <th>Modèle</th>
-                        <th>Catégorie</th>
-                        <th>Carburant</th>
-                        <th>Kilométrage</th>
-                        <th>Prix/Jour (€)</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="v" items="${voitures}">
-                        <tr>
-                            <td>
-                                <img src="${pageContext.request.contextPath}/voiture/${v.photo}" alt="Photo ${v.modele}" class="img-thumbnail rounded" style="width: 110px; height: 70px; object-fit: cover;" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default.png';" />
-                            </td>
-                            <td>${v.immatriculation}</td>
-                            <td>${v.marque}</td>
-                            <td>${v.modele}</td>
-                            <td>${v.categorie}</td>
-                            <td>${v.carburant}</td>
-                            <td>${v.kilometrage} km</td>
-                            <td class="fw-semibold text-success">${v.prixJour} €</td>
-                            <td>
-                                <a href="modifierVoiture?immatriculation=${v.immatriculation}" class="btn btn-sm btn-warning me-1" title="Modifier">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a href="supprimerVoiture?immatriculation=${v.immatriculation}" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette voiture ?');" title="Supprimer">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
+        <a href="${pageContext.request.contextPath}/ajouterVoiture" class="action-btn">
+            <i class="bi bi-plus-circle-fill"></i>
+            <h5>Ajouter une Voiture</h5>
+        </a>
+
+        <a href="${pageContext.request.contextPath}/clients" class="action-btn">
+            <i class="bi bi-person-plus-fill"></i>
+            <h5>Ajouter un Client</h5>
+        </a>
+
+        <a href="${pageContext.request.contextPath}/passerCommande" class="action-btn">
+            <i class="bi bi-cart-check-fill"></i>
+            <h5>Louer une Voiture</h5>
+        </a>
+
+        <a href="${pageContext.request.contextPath}/etatParking" class="action-btn">
+            <i class="bi bi-bar-chart-line-fill"></i>
+            <h5>État du Parking</h5>
+        </a>
+
     </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/includes/footer.jsp" />
+
+<!-- Bootstrap Bundle + JS optionnel -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Effet dynamique JS optionnel -->
+<script>
+    // Petite animation à l'apparition
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".action-btn").forEach((btn, i) => {
+            btn.style.opacity = 0;
+            btn.style.transform = "translateY(20px)";
+            setTimeout(() => {
+                btn.style.transition = "all 0.6s ease";
+                btn.style.opacity = 1;
+                btn.style.transform = "translateY(0)";
+            }, 150 * i);
+        });
+    });
+</script>

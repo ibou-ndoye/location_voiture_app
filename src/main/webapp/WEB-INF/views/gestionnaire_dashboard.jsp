@@ -19,7 +19,7 @@
                     </c:if>
                 </ul>
                 <hr class="text-white" />
-                <div class="text-center small">
+                <div class="text-center small">&euro;&euro;
                     <p class="mb-1">Connecté en tant que :</p>
                     <strong>${utilisateurConnecte.nom} ${utilisateurConnecte.prenom}</strong>
                 </div>
@@ -30,8 +30,8 @@
         <main class="col-md-10 offset-md-2 px-4">
             <div class="pt-4 pb-2 mb-4 border-bottom d-flex justify-content-between align-items-center">
                 <h2 class="fw-bold">Tableau de bord</h2>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Rechercher une voiture..." />
+                <form class="d-flex" method="get" action="${pageContext.request.contextPath}/gestionnaire/dashboard">
+                    <input class="form-control me-2" type="search" name="motCle" placeholder="Rechercher une voiture..." />
                     <button class="btn btn-outline-success">Rechercher</button>
                 </form>
             </div>
@@ -42,7 +42,7 @@
                     <div class="card shadow-sm rounded text-bg-primary">
                         <div class="card-body text-center">
                             <h5>Total de voitures</h5>
-                            <p class="fs-3">${nbTotalVoitures}</p>
+                            <p class="fs-3">${nbTotalVoitures != null ? nbTotalVoitures : 0}</p>
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     <div class="card shadow-sm rounded text-bg-success">
                         <div class="card-body text-center">
                             <h5>Voitures disponibles</h5>
-                            <p class="fs-3">${nbVoituresDisponibles}</p>
+                            <p class="fs-3">${nbVoituresDisponibles != null ? nbVoituresDisponibles : 0}</p>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <div class="card shadow-sm rounded text-bg-warning">
                         <div class="card-body text-center">
                             <h5>Voitures en location</h5>
-                            <p class="fs-3">${nbVoituresEnLocation}</p>
+                            <p class="fs-3">${nbVoituresEnLocation != null ? nbVoituresEnLocation : 0}</p>
                         </div>
                     </div>
                 </div>
@@ -166,7 +166,11 @@
             labels: ['Total Voitures', 'Disponibles', 'En Location'],
             datasets: [{
                 label: 'Nombre de voitures',
-                data: [${nbTotalVoitures}, ${nbVoituresDisponibles}, ${nbVoituresEnLocation}],
+                data: [
+                    ${nbTotalVoitures != null ? nbTotalVoitures : 0},
+                    ${nbVoituresDisponibles != null ? nbVoituresDisponibles : 0},
+                    ${nbVoituresEnLocation != null ? nbVoituresEnLocation : 0}
+                ],
                 backgroundColor: ['#0d6efd', '#198754', '#ffc107'],
                 borderColor: ['#0d6efd', '#198754', '#ffc107'],
                 borderWidth: 1
@@ -181,7 +185,7 @@
                 y: {
                     beginAtZero: true,
                     precision: 0
-                }
+ }
             }
         }
     };
@@ -193,7 +197,7 @@
 
     <c:forEach var="b" items="${bilanMensuel}">
         bilanLabels.push("${b[0]}-${b[1]}");
-        bilanData.push(${b[2]});
+        bilanData.push(${b[2] != null ? b[2] : 0});
     </c:forEach>
 
     const ctxBilan = document.getElementById('bilanChart').getContext('2d');

@@ -37,6 +37,11 @@ public class VoitureService {
         voitureDAO.delete(immatriculation);
     }
     
+    public List<Voiture> getVoituresDisponibles() {
+        return voitureDAO.getVoituresDisponibles();
+    }
+
+
 
     public void fermer() {
         voitureDAO.close();

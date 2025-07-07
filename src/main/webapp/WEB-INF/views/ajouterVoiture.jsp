@@ -7,19 +7,7 @@
     <title>Ajouter une voiture</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/gestionvoiture">VoitureApp</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/gestionvoiture">Voitures</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/inscriptionClient">Clients</a></li>
-                <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/passerCommande">Commandes</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<jsp:include page="/WEB-INF/views/includes/header.jsp" />
 
 <div class="container mt-5">
     <div class="card shadow">
@@ -111,6 +99,4 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<jsp:include page="/WEB-INF/views/includes/footer.jsp" />

@@ -52,6 +52,23 @@ public class LocationDAO {
             em.close();
         }
     }
+    
+    public Location findByIdAvecDetails(int idLocation) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery(
+                "SELECT l FROM Location l " +
+                "JOIN FETCH l.client " +
+                "JOIN FETCH l.voiture " +
+                "JOIN FETCH l.gestionnaire " +
+                "WHERE l.idLocation = :id", Location.class)
+                .setParameter("id", idLocation)
+                .getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
     public List<Location> getVoituresEnLocation() {
         EntityManager em = emf.createEntityManager();
         try {

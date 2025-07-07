@@ -33,7 +33,8 @@ public class PasserCommandeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Client> clients = clientService.getTousLesClients();
-        List<Voiture> voituresDisponibles = voitureService.getToutesLesVoitures();
+        List<Voiture> voituresDisponibles = voitureService.getVoituresDisponibles();
+
 
         HttpSession session = request.getSession();
         Gestionnaire gestionnaire = (Gestionnaire) session.getAttribute("utilisateurConnecte");
@@ -77,7 +78,9 @@ public class PasserCommandeServlet extends HttpServlet {
 
             locationService.ajouterLocation(location);
 
-            response.sendRedirect(request.getContextPath() + "/locations");
+            // ✅ Redirection vers la page facture avec ID de la location
+            response.sendRedirect(request.getContextPath() + "/facture?id=" + location.getIdLocation());
+
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("erreur", "Erreur lors de la création de la commande.");

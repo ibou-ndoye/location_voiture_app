@@ -7,66 +7,13 @@
 <div class="container py-5">
     <!-- En-tête -->
     <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
-        <h2 class="text-primary fw-bold mb-0">
-            <i class="bi bi-person-lines-fill"></i> Ajouter / Modifier un client
+        <h2 class="text-info fw-bold mb-0">
+            <i class="bi bi-people-fill"></i> Liste des Clients
         </h2>
         <a href="${pageContext.request.contextPath}/" class="btn btn-outline-primary d-flex align-items-center gap-2">
             <i class="bi bi-house-door-fill"></i> Accueil
         </a>
     </div>
-
-    <!-- Formulaire client -->
-    <div class="bg-white p-4 rounded shadow-sm border border-2 border-light mb-5">
-        <form action="${pageContext.request.contextPath}/clients" method="post" class="row g-3">
-            <input type="hidden" name="idClient" value="${client.idClient}" />
-
-            <h5 class="text-secondary mt-2 mb-1">Informations personnelles</h5>
-            <div class="col-md-4">
-                <label class="form-label">CIN</label>
-                <input type="text" name="cin" class="form-control" placeholder="Entrez le CIN" value="${client.cin}" required />
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Prénom</label>
-                <input type="text" name="prenom" class="form-control" placeholder="Entrez le prénom" value="${client.prenom}" required />
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Nom</label>
-                <input type="text" name="nom" class="form-control" placeholder="Entrez le nom" value="${client.nom}" required />
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Sexe</label>
-                <select name="sexe" class="form-select" required>
-                    <option value="M" ${client.sexe == 'M' ? 'selected' : ''}>Masculin</option>
-                    <option value="F" ${client.sexe == 'F' ? 'selected' : ''}>Féminin</option>
-                </select>
-            </div>
-
-            <h5 class="text-secondary mt-4 mb-1">Coordonnées</h5>
-            <div class="col-md-8">
-                <label class="form-label">Adresse</label>
-                <input type="text" name="adresse" class="form-control" placeholder="Entrez l'adresse" value="${client.adresse}" required />
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" placeholder="exemple@email.com" value="${client.email}" required />
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Téléphone</label>
-                <input type="text" name="telephone" class="form-control" placeholder="Entrez le numéro" value="${client.telephone}" required />
-            </div>
-
-            <div class="col-12 d-flex justify-content-end">
-                <button type="submit" class="btn btn-success px-4">
-                    <i class="bi bi-save-fill"></i> Enregistrer
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Titre liste -->
-    <h2 class="mb-3 text-info">
-        <a href="#" id="toggleClientList" class="text-decoration-none">📋 Liste des Clients</a>
-    </h2>
 
     <!-- Barre de recherche -->
     <div class="row mb-3 ${hasSearch ? '' : 'd-none'}" id="searchBar">
@@ -138,18 +85,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-<!-- Custom JS -->
+<!-- JS : PDF + Affichage conditionnel -->
 <script>
-    document.getElementById("toggleClientList").addEventListener("click", function (event) {
-        event.preventDefault();
-        const list = document.getElementById("clientList");
-        const download = document.getElementById("downloadSection");
-        const search = document.getElementById("searchBar");
-        list.classList.toggle("d-none");
-        download.classList.toggle("d-none");
-        search.classList.toggle("d-none");
-    });
-
     document.getElementById("downloadPdfBtn").addEventListener("click", function () {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -181,8 +118,8 @@
     });
 </script>
 
-<!-- Style inline -->
-<style> 
+<!-- Style -->
+<style>
     tr:hover {
         background-color: #f8f9fa;
     }
@@ -192,9 +129,7 @@
         box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
     }
 
-    #clientList,
-    #searchBar,
-    #downloadSection {
+    #clientList, #searchBar, #downloadSection {
         transition: all 0.4s ease;
     }
 </style>
