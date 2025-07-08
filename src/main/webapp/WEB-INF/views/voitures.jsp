@@ -44,7 +44,9 @@
                                         <li class="list-group-item"><strong>Catégorie :</strong> ${v.categorie}</li>
                                         <li class="list-group-item"><strong>Carburant :</strong> ${v.carburant}</li>
                                         <li class="list-group-item"><strong>Kilométrage :</strong> ${v.kilometrage} km</li>
-                                        <li class="list-group-item"><strong>Prix par jour :</strong> <span class="text-success fw-semibold">${v.prixJour} €</span></li>
+                                        <li class="list-group-item"><strong>Prix par jour :</strong> 
+                                            <span class="text-success fw-semibold">${v.prixJour} €</span>
+                                        </li>
                                         <li class="list-group-item"><strong>Disponible :</strong> 
                                             <c:choose>
                                                 <c:when test="${v.disponible}">Oui</c:when>
@@ -58,10 +60,13 @@
                                         <a href="modifierVoiture?immatriculation=${v.immatriculation}" class="btn btn-sm btn-warning">
                                             <i class="bi bi-pencil-square"></i> Modifier
                                         </a>
-                                        <a href="supprimerVoiture?immatriculation=${v.immatriculation}" class="btn btn-sm btn-danger"
-                                           onclick="return confirm('Supprimer cette voiture ?');">
-                                            <i class="bi bi-trash"></i> Supprimer
-                                        </a>
+
+                                        <c:if test="${v.disponible}">
+                                            <a href="supprimerVoiture?immatriculation=${v.immatriculation}" class="btn btn-sm btn-danger"
+                                               onclick="return confirm('Supprimer cette voiture ?');">
+                                                <i class="bi bi-trash"></i> Supprimer
+                                            </a>
+                                        </c:if>
                                     </div>
                                 </div> <!-- /collapse -->
                             </div>
