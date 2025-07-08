@@ -22,25 +22,19 @@ public class GestionVoitureServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String query = request.getParameter("query");
-        String marqueFiltre = request.getParameter("marque");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        // Récupérer toutes les voitures sans filtre
+        List<Voiture> voitures = voitureService.getToutesLesVoitures();
 
-        List<Voiture> voitures;
-
-        boolean hasQuery = query != null && !query.trim().isEmpty();
-        boolean hasMarque = marqueFiltre != null && !marqueFiltre.trim().isEmpty() && !marqueFiltre.equalsIgnoreCase("ALL");
-
-        if (hasQuery || hasMarque) {
-            voitures = voitureService.rechercher(query != null ? query : "", hasMarque ? marqueFiltre : null);
-        } else {
-            voitures = voitureService.getToutesLesVoitures();  // <-- correction ici
-        }
-
+        // Récupérer la liste des marques pour affichage ou filtres éventuels
         List<String> marques = voitureService.listerMarquesDisponibles();
 
+        // Passer les données à la JSP
         request.setAttribute("voitures", voitures);
         request.setAttribute("marques", marques);
+
+        // Forward vers la page JSP de gestion voiture
         request.getRequestDispatcher("/WEB-INF/views/gestionvoiture.jsp").forward(request, response);
     }
 

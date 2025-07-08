@@ -35,12 +35,19 @@ public class LocationDAO {
     public List<Location> findAll() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l", Location.class);
+            TypedQuery<Location> query = em.createQuery(
+                "SELECT l FROM Location l " +
+                "JOIN FETCH l.client " +
+                "JOIN FETCH l.voiture " +
+                "JOIN FETCH l.gestionnaire",
+                Location.class
+            );
             return query.getResultList();
         } finally {
             em.close();
         }
     }
+
 
     public void update(Location location) {
         EntityManager em = emf.createEntityManager();

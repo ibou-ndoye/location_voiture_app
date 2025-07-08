@@ -1,5 +1,6 @@
 package com.voitureapp.servlet;
 
+import com.voitureapp.model.Gestionnaire; // import nécessaire pour l'enum Role
 import com.voitureapp.model.Voiture;
 import com.voitureapp.service.VoitureService;
 import jakarta.servlet.ServletException;
@@ -23,15 +24,57 @@ public class ListeVoitureServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Récupérer toutes les voitures
-        List<Voiture> voitures = voitureService.getToutesLesVoitures();
+        String marque = request.getParameter("marque");
+        String carburant = request.getParameter("carburant");
+        String categorie = request.getParameter("categorie");
+        String anneeStr = request.getParameter("annee");
+        String kmMaxStr = request.getParameter("kilometrageMax");
 
-        // Transmettre les voitures à la page JSP
+        Integer annee = null;
+        Integer kmMax = null;
+
+        try {
+            if (anneeStr != null && !anneeStr.isEmpty()) {
+                annee = Integer.parseInt(anneeStr);
+            }
+        } catch (NumberFormatException ignored) {}
+
+        try {
+            if (kmMaxStr != null && !kmMaxStr.isEmpty()) {
+                kmMax = Integer.parseInt(kmMaxStr);
+            }
+        } catch (NumberFormatException ignored) {}
+
+        List<Voiture> voitures;
+        boolean filtreActif = (marque != null && !marque.isEmpty())
+                || (carburant != null && !carburant.isEmpty())
+                || (categorie != null && !categorie.isEmpty())
+                || annee != null || kmMax != null;
+
+        if (filtreActif) {
+            voitures = voitureService.rechercherVoitures(marque, carburant, categorie, annee, kmMax);
+        } else {
+            voitures = voitureService.getToutesLesVoitures();
+        }
+
         request.setAttribute("voitures", voitures);
+        request.setAttribute("marque", marque);
+        request.setAttribute("carburant", carburant);
+        request.setAttribute("categorie", categorie);
+        request.setAttribute("annee", anneeStr);
+        request.setAttribute("kilometrageMax", kmMaxStr);
 
-        // Rediriger vers la JSP correspondante
-        request.getRequestDispatcher("/WEB-INF/views/voitures.jsp")
-               .forward(request, response);
+        // ✅ Correction : cast en enum puis comparaison
+        Gestionnaire.Role role = (Gestionnaire.Role) request.getSession().getAttribute("role");
+
+        String page;
+        if (role != null && role.name().equals("CHEF")) {
+            page = "/WEB-INF/views/voituresChef.jsp";
+        } else {
+            page = "/WEB-INF/views/voitures.jsp";
+        }
+
+        request.getRequestDispatcher(page).forward(request, response);
     }
 
     @Override

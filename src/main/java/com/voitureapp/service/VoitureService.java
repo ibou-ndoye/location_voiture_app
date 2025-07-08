@@ -21,9 +21,10 @@ public class VoitureService {
         return voitureDAO.findAll();
     }
 
-    public List<Voiture> rechercher(String query, String marque) {
-        return voitureDAO.rechercherParMotCleEtMarque(query, marque);
+    public List<Voiture> rechercherVoitures(String marque, String carburant, String categorie, Integer annee, Integer kilometrageMax) {
+        return voitureDAO.rechercherVoitures(marque, carburant, categorie, annee, kilometrageMax);
     }
+
 
     public List<String> listerMarquesDisponibles() {
         return voitureDAO.findDistinctMarques();
@@ -36,15 +37,12 @@ public class VoitureService {
     public void supprimerVoiture(String immatriculation) {
         voitureDAO.delete(immatriculation);
     }
-    
+
     public List<Voiture> getVoituresDisponibles() {
         return voitureDAO.getVoituresDisponibles();
     }
 
-
-
     public void fermer() {
         voitureDAO.close();
     }
-    
 }

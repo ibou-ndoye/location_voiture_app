@@ -100,34 +100,59 @@ public class VoitureDAO {
 
 
     // ➤ Rechercher voitures par mot-clé et marque
-    public List<Voiture> rechercherParMotCleEtMarque(String query, String marque) {
+    public List<Voiture> rechercherVoitures(String marque, String carburant, String categorie, Integer annee, Integer kilometrageMax) {
         EntityManager em = emf.createEntityManager();
         try {
             String jpql = "SELECT v FROM Voiture v WHERE 1=1";
 
-            if (query != null && !query.trim().isEmpty()) {
-                jpql += " AND (LOWER(v.modele) LIKE :query OR LOWER(v.immatriculation) LIKE :query OR LOWER(v.marque) LIKE :query)";
+            if (marque != null && !marque.isEmpty()) {
+                jpql += " AND LOWER(v.marque) LIKE LOWER(:marque)";
+            }
+            if (carburant != null && !carburant.isEmpty()) {
+                jpql += " AND v.carburant = :carburant";
+            }
+            if (categorie != null && !categorie.isEmpty()) {
+                jpql += " AND v.categorie = :categorie";
+            }
+            if (annee != null) {
+                jpql += " AND FUNCTION('YEAR', v.dateMiseCirculation) = :annee";
+            }
+            if (kilometrageMax != null) {
+                jpql += " AND v.kilometrage <= :kilometrageMax";
             }
 
-            if (marque != null && !marque.equalsIgnoreCase("ALL") && !marque.trim().isEmpty()) {
-                jpql += " AND LOWER(v.marque) = :marque";
+            TypedQuery<Voiture> query = em.createQuery(jpql, Voiture.class);
+
+            if (marque != null && !marque.isEmpty()) {
+                query.setParameter("marque", "%" + marque + "%");
+            }
+            if (carburant != null && !carburant.isEmpty()) {
+                try {
+                    query.setParameter("carburant", Voiture.Carburant.valueOf(carburant));
+                } catch (IllegalArgumentException e) {
+                    // Si la valeur du carburant est invalide, ignorer le filtre
+                }
+            }
+            if (categorie != null && !categorie.isEmpty()) {
+                try {
+                    query.setParameter("categorie", Voiture.Categorie.valueOf(categorie));
+                } catch (IllegalArgumentException e) {
+                    // Si la valeur de la catégorie est invalide, ignorer le filtre
+                }
+            }
+            if (annee != null) {
+                query.setParameter("annee", annee);
+            }
+            if (kilometrageMax != null) {
+                query.setParameter("kilometrageMax", kilometrageMax);
             }
 
-            TypedQuery<Voiture> q = em.createQuery(jpql, Voiture.class);
-
-            if (query != null && !query.trim().isEmpty()) {
-                q.setParameter("query", "%" + query.toLowerCase() + "%");
-            }
-
-            if (marque != null && !marque.equalsIgnoreCase("ALL") && !marque.trim().isEmpty()) {
-                q.setParameter("marque", marque.toLowerCase());
-            }
-
-            return q.getResultList();
+            return query.getResultList();
         } finally {
             em.close();
         }
     }
+
 
     // ➤ Lister toutes les marques distinctes
     public List<String> findDistinctMarques() {

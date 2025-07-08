@@ -10,16 +10,16 @@
                 <h4>Menu</h4>
                 <ul class="nav flex-column mt-4">
                     <c:if test="${role == 'CHEF'}">
-                        <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/voitures">Voitures</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/gestionnaire/dashboard">TABLEAU DE BORD</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/voitures"> Voitures</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/locations">Locations</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/clients">Clients</a></li>
                     </c:if>
                     <c:if test="${role == 'GESTIONNAIRE'}">
                         <li class="nav-item"><a class="nav-link text-white" href="${pageContext.request.contextPath}/clients">Liste des Clients</a></li>
                     </c:if>
                 </ul>
                 <hr class="text-white" />
-                <div class="text-center small">&euro;&euro;
+                <div class="text-center small">
                     <p class="mb-1">Connecté en tant que :</p>
                     <strong>${utilisateurConnecte.nom} ${utilisateurConnecte.prenom}</strong>
                 </div>
