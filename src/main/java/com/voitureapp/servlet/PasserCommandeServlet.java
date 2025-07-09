@@ -35,7 +35,6 @@ public class PasserCommandeServlet extends HttpServlet {
         List<Client> clients = clientService.getTousLesClients();
         List<Voiture> voituresDisponibles = voitureService.getVoituresDisponibles();
 
-
         HttpSession session = request.getSession();
         Gestionnaire gestionnaire = (Gestionnaire) session.getAttribute("utilisateurConnecte");
 
@@ -49,6 +48,7 @@ public class PasserCommandeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            // 1. Récupération des paramètres
             int idClient = Integer.parseInt(request.getParameter("id_client"));
             String immatriculation = request.getParameter("immatriculation");
             int idGestionnaire = Integer.parseInt(request.getParameter("id_gestionnaire"));
@@ -60,11 +60,13 @@ public class PasserCommandeServlet extends HttpServlet {
             double prixTotal = Double.parseDouble(request.getParameter("prix_total"));
             int kmDepart = Integer.parseInt(request.getParameter("kilometrage_depart"));
 
+            // 2. Chargement des entités
             Client client = clientService.getClientById(idClient);
             Voiture voiture = voitureService.getVoitureById(immatriculation);
             Gestionnaire gestionnaire = new Gestionnaire();
             gestionnaire.setIdGestionnaire(idGestionnaire);
 
+            // 3. Création de la location
             Location location = new Location();
             location.setClient(client);
             location.setVoiture(voiture);
@@ -76,9 +78,14 @@ public class PasserCommandeServlet extends HttpServlet {
             location.setSigneClient(false);
             location.setSigneGestionnaire(false);
 
+            // 4. Ajout de la location en base
             locationService.ajouterLocation(location);
 
-            // ✅ Redirection vers la page facture avec ID de la location
+            // 5. Mettre à jour la disponibilité de la voiture
+            voiture.setDisponible(false);
+            voitureService.modifierVoiture(voiture);
+
+            // 6. Rediriger vers la page de facture avec l'ID de la location
             response.sendRedirect(request.getContextPath() + "/facture?id=" + location.getIdLocation());
 
         } catch (Exception e) {

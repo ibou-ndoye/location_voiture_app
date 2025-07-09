@@ -116,18 +116,7 @@
                             </li>
                         </ul>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="modifierVoiture?immatriculation=${v.immatriculation}" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil-square"></i> Modifier
-                            </a>
-                            <c:if test="${v.disponible}">
-                                <a href="supprimerVoiture?immatriculation=${v.immatriculation}"
-                                   class="btn btn-sm btn-danger"
-                                   onclick="return confirm('Confirmer la suppression ?');">
-                                    <i class="bi bi-trash"></i> Supprimer
-                                </a>
-                            </c:if>
-                        </div>
+                       
                     </div>
                 </div>
             </div>

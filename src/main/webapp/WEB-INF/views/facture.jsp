@@ -45,48 +45,65 @@
             </div>
             <div class="col-md-6 text-center">
                 <img src="${pageContext.request.contextPath}/voiture/${location.voiture.photo}" 
-     alt="Photo de la voiture" 
-     class="voiture-img mt-2" />
-
+                     alt="Photo de la voiture" 
+                     class="voiture-img mt-2" />
             </div>
         </div>
 
         <hr>
 
         <c:if test="${param.signatures == 'true'}">
-    <div class="mt-3">
-        <p><strong>✍️ Signature client :</strong> 
-            <span class="${location.signeClient ? 'text-success' : 'text-danger'}">
-                ${location.signeClient ? "✔️ Signé" : "❌ Non signé"}
-            </span>
-        </p>
-        <p><strong>✍️ Signature gestionnaire :</strong> 
-            <span class="${location.signeGestionnaire ? 'text-success' : 'text-danger'}">
-                ${location.signeGestionnaire ? "✔️ Signé" : "❌ Non signé"}
-            </span>
-        </p>
-    </div>
-</c:if>
-        
+            <div class="mt-3">
+                <p><strong>✍️ Signature client :</strong> 
+                    <span class="${location.signeClient ? 'text-success' : 'text-danger'}">
+                        ${location.signeClient ? "✔️ Signé" : "❌ Non signé"}
+                    </span>
+                </p>
+                <p><strong>✍️ Signature gestionnaire :</strong> 
+                    <span class="${location.signeGestionnaire ? 'text-success' : 'text-danger'}">
+                        ${location.signeGestionnaire ? "✔️ Signé" : "❌ Non signé"}
+                    </span>
+                </p>
+            </div>
+        </c:if>
 
-        <!-- Flèche animée vers bouton -->
+        <!-- Flèche animée -->
         <div id="arrowContainer" class="highlight-arrow">⬇️</div>
 
         <div class="mt-4 text-center">
-            <a href="${pageContext.request.contextPath}/genererFacturePdf?id=${location.idLocation}" 
-   class="btn btn-outline-primary btn-lg me-2">
-   📥 Télécharger la facture (PDF)
-</a>
+            <!-- BOUTON DE TÉLÉCHARGEMENT PDF -->
+            <button id="btnTelechargerPdf" class="btn btn-outline-primary btn-lg me-2">
+                📥 Télécharger la facture (PDF)
+            </button>
 
-            <a href="${pageContext.request.contextPath}/locations" class="btn btn-secondary btn-lg">Retour</a>
+            <a href="${pageContext.request.contextPath}/gestionvoiture" class="btn btn-secondary btn-lg">Retour</a>
         </div>
     </div>
 </div>
 
+<!-- JS: Défilement + Téléchargement PDF -->
 <script>
     window.addEventListener("load", function () {
         const arrow = document.getElementById("arrowContainer");
         arrow.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    document.getElementById("btnTelechargerPdf").addEventListener("click", function () {
+        const url = "${pageContext.request.contextPath}/genererFacturePdf?id=${location.idLocation}";
+        
+        // Créer iframe invisible pour télécharger
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = url;
+        document.body.appendChild(iframe);
+
+        // Nettoyage + blocage temporaire du bouton
+        const btn = this;
+        btn.disabled = true;
+        setTimeout(() => {
+            document.body.removeChild(iframe);
+            btn.disabled = false;
+        }, 3000);
     });
 </script>
 

@@ -70,7 +70,7 @@
         </c:choose>
 
         <div class="mt-4 d-flex justify-content-start">
-            <a href="${pageContext.request.contextPath}/clients" class="btn btn-secondary">
+            <a href="${pageContext.request.contextPath}/clientel" class="btn btn-secondary">
                 ⬅ Retour à la liste des clients
             </a>
         </div>

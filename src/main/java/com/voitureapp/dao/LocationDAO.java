@@ -53,12 +53,21 @@ public class LocationDAO {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
+
+            // Mise à jour de la location
             em.merge(location);
+
+            // Mise à jour explicite de la voiture liée (pour que la modif du champ 'disponible' soit prise en compte)
+            if (location.getVoiture() != null) {
+                em.merge(location.getVoiture());
+            }
+
             em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
+
     
     public Location findByIdAvecDetails(int idLocation) {
         EntityManager em = emf.createEntityManager();

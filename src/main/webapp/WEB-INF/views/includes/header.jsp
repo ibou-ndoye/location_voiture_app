@@ -145,7 +145,7 @@
     <div class="sidebar">
         <a href="${pageContext.request.contextPath}/gestionvoiture" class="active"><i class="bi bi-speedometer2 me-2"></i> Tableau de bord</a>
         <a href="${pageContext.request.contextPath}/voitures"><i class="bi bi-car-front-fill me-2"></i> Voitures</a>
-        <a href="${pageContext.request.contextPath}/clients"><i class="bi bi-people-fill me-2"></i> Clients</a>
+        <a href="${pageContext.request.contextPath}/clientel"><i class="bi bi-people-fill me-2"></i> Clients</a>
         <a href="${pageContext.request.contextPath}/passerCommande"><i class="bi bi-calendar-check-fill me-2"></i> Locations</a>
         <a href="${pageContext.request.contextPath}/etatParking"><i class="bi bi-bar-chart-fill me-2"></i> Parking</a>
     </div>
